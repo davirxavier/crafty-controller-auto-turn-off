@@ -30,6 +30,7 @@ const config = {
   hostUrl: process.env.hostUrl,
   timezoneUtcOffset: process.env.timezoneUtcOffset || '+00:00',
   inactiveMinutesForSleep: parseInt(process.env.inactiveMinutes) || 10,
+  checkInterval: parseInt(process.env.checkIntervalSeconds) || 15,
   motd: process.env.motd || 'Servidor em modo de espera. Tente conectar e espere um pouco para que ele seja religado.',
   disconnectPhrase: process.env.disconnectPhrase || 'O servidor foi acordado do modo de espera e está iniciando, aguarde um momento e tente novamente.',
   serverVersion: '1.19.2',
@@ -147,6 +148,6 @@ async function check() {
   }
 }
 
-setInterval(check, 15 * 1000);
+setInterval(check, config.checkInterval * 1000);
 check().then();
 
