@@ -26,10 +26,10 @@ const log = winston.createLogger({
 });
 
 const config = {
-  host: process.env.host,
   username: process.env.username,
   password: process.env.password,
   hostUrl: process.env.hostUrl,
+  portOffset: parseInt(process.env.portOffset) || -100,
   timezoneUtcOffset: process.env.timezoneUtcOffset || '+00:00',
   inactiveMinutesForSleep: parseInt(process.env.inactiveMinutes) || 10,
   checkInterval: parseInt(process.env.checkIntervalSeconds) || 15,
@@ -118,7 +118,7 @@ async function check() {
       const server = minecraft.createServer({
         'online-mode': false,
         host: '0.0.0.0',
-        port: s.serverPort,
+        port: s.serverPort + config.portOffset,
         version: config.serverVersion,
         motd: config.motd
       });
