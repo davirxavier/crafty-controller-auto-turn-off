@@ -138,6 +138,7 @@ async function check() {
     };
 
     if (s.stats.running && listening.some(found => found.serverId === s.serverId)) {
+      log.info('Real server is already running, stopping the dummy server.')
       serversByPort[s.serverPort]?.close();
       delete serversByPort[s.serverPort];
       const idx = listening.findIndex(found => found.serverId === s.serverId);
