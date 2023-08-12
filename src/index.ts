@@ -5,8 +5,10 @@ import {camelizeKeys} from "humps";
 import * as moment from "moment";
 import * as minecraft from "minecraft-protocol";
 import * as winston from "winston";
-
+import {config as configDotenv} from "dotenv";
 const { combine, timestamp, label, printf } = winston.format;
+
+configDotenv();
 
 const myFormat = printf(({ level, message, label, timestamp }) => {
   return `${timestamp} [${label}] ${level}: ${message}`;
