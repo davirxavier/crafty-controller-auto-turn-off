@@ -20,6 +20,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "start": "npx ts-node src/index.ts"
+    "start": "npx ts-node src/index.ts",
+    "start:prod": "npm run build && node build/src/index.js"
   }
 }

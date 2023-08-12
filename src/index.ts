@@ -33,7 +33,7 @@ const config = {
   checkInterval: parseInt(process.env.checkIntervalSeconds) || 15,
   motd: process.env.motd || 'Servidor em modo de espera. Tente conectar e espere um pouco para que ele seja religado.',
   disconnectPhrase: process.env.disconnectPhrase || 'O servidor foi acordado do modo de espera e está iniciando, aguarde um momento e tente novamente.',
-  serverVersion: '1.19.2',
+  serverVersion: process.env.mockServerVersion || '1.19.2',
   token: ''
 };
 const listening: ServerEntity[] = [];
@@ -148,6 +148,9 @@ async function check() {
   }
 }
 
-setInterval(check, config.checkInterval * 1000);
-check().then();
+setInterval(() => {
+  check().catch(err => {
+        log.error('Error while trying to check servers: ', err);
+      });
+}, config.checkInterval * 1000);
 
