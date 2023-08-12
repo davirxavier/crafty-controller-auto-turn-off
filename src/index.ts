@@ -137,6 +137,15 @@ async function check() {
       });
     };
 
+    if (s.stats.running && listening.some(found => found.serverId === s.serverId)) {
+      serversByPort[s.serverPort]?.close();
+      delete serversByPort[s.serverPort];
+      const idx = listening.findIndex(found => found.serverId === s.serverId);
+      if (idx >= 0) {
+        listening.splice(idx, 1);
+      }
+    }
+
     if (s.stats.running && !s.stats.waitingStart && !!s.stats.started && moment().utc().utcOffset(config.timezoneUtcOffset).diff(s.stats.started, "minute") >= config.inactiveMinutesForSleep && s.stats.online === 0) {
       log.info('No players found on server ' + s.serverName + 'after ' + config.inactiveMinutesForSleep + ' minute timeout, turning off.');
       await stopServer(s.serverId);
