@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  crafty:
+    container_name: craft_auto_turnoff
+    image: crafty-auto-turnoff
+    restart: unless-stopped
+    environment:
+      - host=127.0.0.1
+      - username=myuser
+      - password=mypass
+      - hostUrl=https://127.0.0.1:8080
+      - timezoneUtcOffset=+00:00
+      - inactiveMinutes=10
+      - checkIntervalSeconds=15
+      - motd=Server is sleeping.
+      - disconnectPhrase=Server has been woken, please try reconnecting.
+      - mockServerVersion=1.19.2
+    ports:
+      - "25500-25520:25500-25520" # MC SERVER PORT RANGE
