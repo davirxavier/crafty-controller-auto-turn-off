@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  crafty:
+    container_name: crafty_container
+    image: registry.gitlab.com/crafty-controller/crafty-4:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Etc/UTC
+    ports:
+      - "8000:8000" # HTTP
+      - "8443:8443" # HTTPS
+      - "19132:19132/udp" # BEDROCK
+      - "25700-25720:25700-25720" # MC SERV PORT RANGE
+    volumes:
+      - ./docker/backups:/crafty/backups
+      - ./docker/logs:/crafty/logs
+      - ./docker/servers:/crafty/servers
+      - ./docker/config:/crafty/app/config
+      - ./docker/import:/crafty/import
+
+  crafty_auto_stop:
+    container_name: craft_auto_stop
+    image: crafty-auto-turnoff
+    restart: unless-stopped
+    environment:
+      - username=<USERNAME>
+      - password=<PASSWORD>
+      - hostUrl=https://127.0.0.1
+      - timezoneUtcOffset=+00:00
+      - inactiveMinutes=10
+      - checkIntervalSeconds=15
+      - mockServerVersion=1.19.2
+    ports:
+      - "25600-25620:25600-25620" # MC SERVER PORT RANGE
+
+  haproxy:
+    image: haproxy:latest
+    restart: unless-stopped
+    ports:
+      - "25500-25520:25500-25520"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro

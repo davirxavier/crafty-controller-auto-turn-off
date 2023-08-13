@@ -28,6 +28,7 @@ const log = winston.createLogger({
 const config = {
   username: process.env.username,
   password: process.env.password,
+  apiKey: process.env.apiKey,
   hostUrl: process.env.hostUrl,
   portOffset: parseInt(process.env.portOffset) || -100,
   timezoneUtcOffset: process.env.timezoneUtcOffset || '+00:00',
@@ -61,8 +62,13 @@ http.interceptors.response.use(res => {
 });
 
 async function login() {
-  const res = await http.post('api/v2/auth/login', {username: config.username, password: config.password});
-  config.token = res.data?.data?.token;
+  if (config.apiKey) {
+    config.token = config.apiKey;
+  } else {
+    const res = await http.post('api/v2/auth/login', {username: config.username, password: config.password});
+    config.token = res.data?.data?.token;
+  }
+
 }
 
 function retryLogin(cb: () => any) {
